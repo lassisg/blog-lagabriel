@@ -28,8 +28,7 @@ builder.Services.AddAuthentication(options =>
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
                        throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                                                        options.UseSqlite(connectionString));
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -38,6 +37,19 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+
+
+// builder.Services.AddOptions<BlogApiJsonDirectAccessSetting>()
+//     .Configure(options =>
+//     {
+//         options.DataPath = @"../../../Data";
+//         options.BlogPostsFolder = "BlogPosts";
+//         options.TagsFolder = "Tags";
+//         options.CategoriesFolder = "Categories";
+//         options.CommentsFolder = "Comments";
+//     });
+//
+// builder.Services.AddScoped<IBlogApi, BlogApiJsonDirectAccess>();
 
 var app = builder.Build();
 
@@ -67,5 +79,10 @@ app.MapRazorComponents<App>()
 
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
+
+// app.MapBlogPostApi();
+// app.MapCategoryApi();
+// app.MapTagApi();
+// app.MapCommentApi();
 
 app.Run();
