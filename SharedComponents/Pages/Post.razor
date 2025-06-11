@@ -1,0 +1,50 @@
+@page "/Post/{BlogPostId}"
+
+@inject IBlogApi _api
+@inject NavigationManager _navman
+@using Markdig;
+
+@if (BlogPost is not null)
+{
+    <PageTitle>@BlogPost.Title</PageTitle>
+    <HeadContent>
+        <meta property="og:title" 
+              content="@BlogPost.Title"/>
+        <meta property="og:description" 
+              content="@(new string(BlogPost.Text.Take(100).ToArray()))"/>
+        <meta property="og:image" 
+              content="@($"{_navman.BaseUri}/pathtoanimage.png")"/>
+        <meta property="og:url" 
+              content="@_navman.Uri"/>
+        <meta property="twitter:card" 
+              content="@(new string(BlogPost.Text.Take(100).ToArray()))"/>
+    </HeadContent>
+    
+    <h2>@BlogPost.Title</h2>
+    
+    @((MarkupString)Markdig.Markdown.ToHtml(BlogPost.Text,pipeline))
+    
+    <Comments BlogPostId="@BlogPostId" />
+}
+
+@code {
+    [Parameter]
+    public string BlogPostId { get; set; }
+    public BlogPost? BlogPost { get; set; }
+
+    MarkdownPipeline pipeline;
+    protected override Task OnInitializedAsync()
+    {
+        pipeline = new MarkdownPipelineBuilder()
+            .UseEmojiAndSmiley()
+            .Build();
+        return base.OnInitializedAsync();
+    }
+    
+    protected override async Task OnParametersSetAsync()
+    {
+        BlogPost = await _api.GetBlogPostAsync(BlogPostId);
+        await base.OnParametersSetAsync();
+    }
+
+}

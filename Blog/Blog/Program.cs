@@ -1,10 +1,12 @@
+using BlazorWebApp.Endpoints;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Blog.Client.Pages;
 using Blog.Components;
 using Blog.Components.Account;
 using Blog.Data;
+using Data;
+using Data.Models.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,17 +41,17 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
 
-// builder.Services.AddOptions<BlogApiJsonDirectAccessSetting>()
-//     .Configure(options =>
-//     {
-//         options.DataPath = @"../../../Data";
-//         options.BlogPostsFolder = "BlogPosts";
-//         options.TagsFolder = "Tags";
-//         options.CategoriesFolder = "Categories";
-//         options.CommentsFolder = "Comments";
-//     });
-//
-// builder.Services.AddScoped<IBlogApi, BlogApiJsonDirectAccess>();
+builder.Services.AddOptions<BlogApiJsonDirectAccessSetting>()
+    .Configure(options =>
+    {
+        options.DataPath = @"../../../Data";
+        options.BlogPostsFolder = "BlogPosts";
+        options.TagsFolder = "Tags";
+        options.CategoriesFolder = "Categories";
+        options.CommentsFolder = "Comments";
+    });
+
+builder.Services.AddScoped<IBlogApi, BlogApiJsonDirectAccess>();
 
 var app = builder.Build();
 
@@ -68,21 +70,21 @@ else
 
 app.UseHttpsRedirection();
 
-
 app.UseAntiforgery();
-
 app.MapStaticAssets();
+
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
-    .AddAdditionalAssemblies(typeof(Blog.Client._Imports).Assembly);
+    .AddAdditionalAssemblies(typeof(Blog.Client._Imports).Assembly)
+    .AddAdditionalAssemblies(typeof(SharedComponents._Imports).Assembly);
 
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
 
-// app.MapBlogPostApi();
-// app.MapCategoryApi();
-// app.MapTagApi();
-// app.MapCommentApi();
+app.MapBlogPostApi();
+app.MapCategoryApi();
+app.MapTagApi();
+app.MapCommentApi();
 
 app.Run();

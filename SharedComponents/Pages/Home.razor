@@ -1,0 +1,31 @@
+@page "/"
+@rendermode InteractiveServer
+@inject IBlogApi _api
+
+<ul>
+    <Virtualize ItemsProvider="LoadPosts" Context="p">
+        <li><a href="/Post/@p.Id">@p.Title</a></li>
+    </Virtualize>
+</ul>
+
+@code{
+    [Parameter]
+    public string BlogPostId { get; set; }
+
+    public int totalBlogPosts { get; set; }
+
+    private async ValueTask<ItemsProviderResult<BlogPost>>
+        LoadPosts(ItemsProviderRequest request)
+    {
+        if (totalBlogPosts == 0)
+        {
+            totalBlogPosts = await _api.GetBlogPostCountAsync();
+        }
+        var numblogposts = Math.Min(request.Count, totalBlogPosts -
+                                                   request.StartIndex);
+        var blogposts= await _api.
+            GetBlogPostsAsync(numblogposts,request.StartIndex);
+        return new ItemsProviderResult<BlogPost>(blogposts,
+                                                 totalBlogPosts);
+    }
+}
