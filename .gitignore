@@ -539,3 +539,5 @@ FodyWeavers.xsd
 
 # Android studio 3.1+ serialized cache file
 
+# Added by user
+.idea
