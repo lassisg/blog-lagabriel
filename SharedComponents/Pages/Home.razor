@@ -9,6 +9,7 @@
         @((MarkupString)Markdown.ToHtml(new string(p.Text.Take(100).ToArray()), pipeline))
         <a href="/Post/@p.Id">Read more</a>
     </article>
+    <hr/>
 </Virtualize>
 
 @code{
@@ -33,11 +34,8 @@
         {
             totalBlogPosts = await _api.GetBlogPostCountAsync();
         }
-        var numblogposts = Math.Min(request.Count, totalBlogPosts -
-                                                   request.StartIndex);
-        var blogposts= await _api.
-            GetBlogPostsAsync(numblogposts,request.StartIndex);
-        return new ItemsProviderResult<BlogPost>(blogposts,
-                                                 totalBlogPosts);
+        var numblogposts = Math.Min(request.Count, totalBlogPosts - request.StartIndex);
+        var blogposts= await _api.GetBlogPostsAsync(numblogposts,request.StartIndex);
+        return new ItemsProviderResult<BlogPost>(blogposts, totalBlogPosts);
     }
 }
