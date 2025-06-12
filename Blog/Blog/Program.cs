@@ -49,7 +49,6 @@ builder.Services.AddOptions<BlogApiJsonDirectAccessSetting>()
         options.BlogPostsFolder = "BlogPosts";
         options.TagsFolder = "Tags";
         options.CategoriesFolder = "Categories";
-        options.CommentsFolder = "Comments";
     });
 
 builder.Services.AddScoped<IBlogApi, BlogApiJsonDirectAccess>();
@@ -86,6 +85,5 @@ app.MapAdditionalIdentityEndpoints();
 app.MapBlogPostApi();
 app.MapCategoryApi();
 app.MapTagApi();
-app.MapCommentApi();
 
 app.Run();

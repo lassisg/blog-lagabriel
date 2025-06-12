@@ -143,40 +143,4 @@ public class BlogApiWebClient : IBlogApi
 
         return null;
     }
-    
-    public async Task<List<Comment>> GetCommentsAsync(string blogpostid)
-    {
-        var httpclient = _factory.CreateClient("Api");
-        return await httpclient.GetFromJsonAsync<List<Comment>>($"api/Comments/{blogpostid}");
-    }
-    
-    public async Task DeleteCommentAsync(string id)
-    {
-        try
-        {
-            var httpclient = _factory.CreateClient("Api");
-            await httpclient.DeleteAsync($"api/Comments/{id}");
-        }
-        catch (AccessTokenNotAvailableException exception)
-        {
-            exception.Redirect();
-        }
-    }
-
-    public async Task<Comment?> SaveCommentAsync(Comment item)
-    {
-        try
-        {
-            var httpclient = _factory.CreateClient("Api");
-            var response = await httpclient.PutAsJsonAsync<Comment>("api/Comments", item);
-            var json = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<Comment>(json);
-        }
-        catch (AccessTokenNotAvailableException exception)
-        {
-            exception.Redirect();
-        }
-
-        return null;
-    }
 }

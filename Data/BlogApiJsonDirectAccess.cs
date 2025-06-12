@@ -24,7 +24,6 @@ public class BlogApiJsonDirectAccess : IBlogApi
         CreateDirectoryIfNotExists(Path.Combine([_settings.DataPath, _settings.BlogPostsFolder]));
         CreateDirectoryIfNotExists(Path.Combine([_settings.DataPath, _settings.CategoriesFolder]));
         CreateDirectoryIfNotExists(Path.Combine([_settings.DataPath, _settings.TagsFolder]));
-        CreateDirectoryIfNotExists(Path.Combine([_settings.DataPath, _settings.CommentsFolder]));
     }
 
     private static void CreateDirectoryIfNotExists(string path)
@@ -110,12 +109,6 @@ public class BlogApiJsonDirectAccess : IBlogApi
         var list = await LoadAsync<Tag>(_settings.TagsFolder);
         return list.FirstOrDefault(t => t.Id == id);
     }
-
-    public async Task<List<Comment>> GetCommentsAsync(string blogPostId)
-    {
-        var list = await LoadAsync<Comment>(_settings.CommentsFolder);
-        return list.Where(t => t.BlogPostId == blogPostId).ToList();
-    }
     
     public async Task<BlogPost?> SaveBlogPostAsync(BlogPost item)
     {
@@ -137,26 +130,10 @@ public class BlogApiJsonDirectAccess : IBlogApi
         await SaveAsync(_settings.TagsFolder, item.Id, item);
         return item;
     }
-    
-    public async Task<Comment?> SaveCommentAsync(Comment item)
-    {
-        item.Id ??= Guid.NewGuid().ToString();
-        await SaveAsync(_settings.CommentsFolder, item.Id, item);
-        return item;
-    }
 
     public async Task DeleteBlogPostAsync(string id)
     {
         await DeleteAsync(_settings.BlogPostsFolder, id);
-
-        var comments = await GetCommentsAsync(id);
-        foreach (var comment in comments)
-        {
-            if (comment.Id != null)
-            {
-                await DeleteAsync(_settings.CommentsFolder, comment.Id);
-            }
-        }
     }
 
     public async Task DeleteCategoryAsync(string id)
@@ -167,10 +144,5 @@ public class BlogApiJsonDirectAccess : IBlogApi
     public async Task DeleteTagAsync(string id)
     {
         await DeleteAsync(_settings.TagsFolder, id);
-    }
-    
-    public async Task DeleteCommentAsync(string id)
-    {
-        await DeleteAsync(_settings.CommentsFolder, id);
     }
 }
