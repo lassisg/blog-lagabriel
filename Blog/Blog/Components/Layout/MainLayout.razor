@@ -1,14 +1,13 @@
 ﻿@inherits LayoutComponentBase
 
-<header>
+
+<main>
     <Header />
-</header>
 
-
-<main class="container">
-    <div class="content">
+    <div class="container content pb-3">
         @Body
     </div>
+    @* <Footer /> *@
 </main>
 
 <div id="blazor-error-ui" data-nosnippet>
@@ -16,7 +15,3 @@
     <a href="." class="reload">Reload</a>
     <span class="dismiss">🗙</span>
 </div>
-
-<footer>
-    
-</footer>
