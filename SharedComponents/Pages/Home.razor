@@ -4,12 +4,14 @@
 @inject IBlogApi _api
 
 <Virtualize ItemsProvider="LoadPosts" Context="p">
-    <article>
-        <h2>@p.Title</h2>
-        @((MarkupString)Markdown.ToHtml(new string(p.Text.Take(100).ToArray()), pipeline))
-        <a href="/Post/@p.Id">Read more</a>
-    </article>
-    <hr/>
+    <div class="col-4 mx-auto">
+        <article>
+            <h2>@p.Title</h2>
+            @((MarkupString)Markdown.ToHtml(new string(p.Text.Take(100).ToArray()), pipeline))
+            <a href="/Post/@p.Id">Read more</a>
+        </article>
+        <hr/>
+    </div>
 </Virtualize>
 
 @code{
