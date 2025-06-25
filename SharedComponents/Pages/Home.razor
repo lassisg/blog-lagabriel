@@ -10,7 +10,7 @@
             <div class="row g-0">
                 <div class="col">
                     <div class="card-body">
-                        <h2 class="card-title">@p.Title | Test</h2>
+                        <h2 class="card-title">@p.Title</h2>
                         @((MarkupString)Markdown.ToHtml(new string(p.Text.Take(100).ToArray()), pipeline))
                         <div class="text-end">
                             <p class="card-text"><small class="text-body-secondary">Publised on @p.PublishDate.ToString("D", enUS)</small></p>
