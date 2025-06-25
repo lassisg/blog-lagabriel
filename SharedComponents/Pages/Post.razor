@@ -16,9 +16,15 @@
     </HeadContent>
         
     <div class="col-4 mx-auto">
-        <h2>@BlogPost.Title</h2>
+        <div class="card border-0">
+            <div class="card-body">
+                <h2 class="card-title">@BlogPost.Title</h2>
+                <h6 class="card-subtitle mb-2 text-body-secondary">@BlogPost.PublishDate.ToLongDateString()</h6>
+                @((MarkupString)Markdig.Markdown.ToHtml(BlogPost.Text,pipeline))
+            </div>
+        </div>
         
-        @((MarkupString)Markdig.Markdown.ToHtml(BlogPost.Text,pipeline))
+        
     </div>
 }
 
