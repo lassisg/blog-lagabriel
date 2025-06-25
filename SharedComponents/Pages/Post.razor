@@ -14,10 +14,12 @@
         <meta property="og:url" content="@_navman.Uri"/>
         <meta property="twitter:card" content="@(new string(BlogPost.Text.Take(100).ToArray()))"/>
     </HeadContent>
-    
-    <h2>@BlogPost.Title</h2>
-    
-    @((MarkupString)Markdig.Markdown.ToHtml(BlogPost.Text,pipeline))
+        
+    <div class="col-4 mx-auto">
+        <h2>@BlogPost.Title</h2>
+        
+        @((MarkupString)Markdig.Markdown.ToHtml(BlogPost.Text,pipeline))
+    </div>
 }
 
 @code {
