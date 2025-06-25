@@ -4,28 +4,30 @@
 @attribute [Authorize]
 @inject IBlogApi _api
 
-<a href="/admin/blogposts/new">New blog post</a>
+<div class="col-4 mx-auto">
+    <a href="/admin/blogposts/new">New blog post</a>
 
-@if (posts?.Count == 0)
-{
-    <p>No blog posts found</p>
-}
-else if (posts == null)
-{
-    <p>Loading...</p>
-}
-else
-{
-    <ul>
-        @foreach (var p in posts)
-        {
-            <li>
-                @p.PublishDate.ToShortDateString() |
-                <a href="/admin/blogposts/@p.Id">@p.Title</a>
-            </li>
-        }
-    </ul>
-}
+    @if (posts?.Count == 0)
+    {
+        <p>No blog posts found</p>
+    }
+    else if (posts == null)
+    {
+        <p>Loading...</p>
+    }
+    else
+    {
+        <ul>
+            @foreach (var p in posts)
+            {
+                <li>
+                    @p.PublishDate.ToShortDateString() |
+                    <a href="/admin/blogposts/@p.Id">@p.Title</a>
+                </li>
+            }
+        </ul>
+    }
+</div>
 
 @code {
     private List<BlogPost>? posts;
