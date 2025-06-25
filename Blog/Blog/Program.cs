@@ -13,7 +13,7 @@ builder.Services.AddRazorComponents()
 builder.Services.AddOptions<BlogApiJsonDirectAccessSetting>()
     .Configure(options =>
     {
-        options.DataPath = @"../../Data";
+        options.DataPath = builder.Configuration.GetSection("DataPath").Value ?? "./";
         options.BlogPostsFolder = "BlogPosts";
         options.TagsFolder = "Tags";
         options.CategoriesFolder = "Categories";
