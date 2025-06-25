@@ -8,50 +8,60 @@
 @using Markdig 
 @using SharedComponents.ReusableComponents
 
-<EditForm Model="Post" OnValidSubmit="SavePost">
-    <DataAnnotationsValidator />
-    <CustomCssClassProvider ProviderType="BootstrapFieldCssClassProvider" />
-    <BlogNavigationLock @ref="NavigationLock"/>
+<div class="row gx-5">
     
-    <InputText @bind-Value="Post.Title"/>
-    <ValidationMessage For="() => Post.Title"/>
-    
-    <InputDate @bind-Value="Post.PublishDate"/>
-    <ValidationMessage For="() => Post.PublishDate"/>
-    
-    <InputSelect @bind-Value="selectedCategory">
-        <option value="0" disabled>None selected</option>
-        @foreach (var category in Categories)
-        {
-            <option value="@category.Id">@category.Name </option>
-        }
-    </InputSelect>
-    
-    <ul>
-        @foreach (var tag in Tags)
-        {
-            <li>
-                @tag.Name
-                @if (Post.Tags.Any(t => t.Id == tag.Id))
-                {
-                    <button type="button" @onclick="@(() => {
-                        Post.Tags.Remove(Post.Tags.Single(t=>t.Id==tag.Id)); })">Remove</button>
-                }
-                else
-                {
-                    <button type="button" @onclick="@(()=> { 
-                        Post.Tags.Add(tag); })">Add</button>
-                }
-            </li>
-        }
-    </ul>
-    <InputTextAreaOnInput @bind-Value="Post.Text" @onkeyup="UpdateHTML"/>
-    <ValidationMessage For="() => Post.Text"/>
-    
-    <button type="submit" class="btn btn-success">Save</button>
-</EditForm>
+    <EditForm Model="Post" OnValidSubmit="SavePost" class="col-6">
+        <DataAnnotationsValidator />
+        <CustomCssClassProvider ProviderType="BootstrapFieldCssClassProvider" />
+        <BlogNavigationLock @ref="NavigationLock"/>
+        
+        <InputText @bind-Value="Post.Title"/>
+        <ValidationMessage For="() => Post.Title"/>
+        
+        <InputDate @bind-Value="Post.PublishDate"/>
+        <ValidationMessage For="() => Post.PublishDate"/>
+        
+        <InputSelect @bind-Value="selectedCategory">
+            <option value="0" disabled>None selected</option>
+            @foreach (var category in Categories)
+            {
+                <option value="@category.Id">@category.Name </option>
+            }
+        </InputSelect>
+        
+        <ul>
+            @foreach (var tag in Tags)
+            {
+                <li>
+                    @tag.Name
+                    @if (Post.Tags.Any(t => t.Id == tag.Id))
+                    {
+                        <button type="button" @onclick="@(() => {
+                                                            Post.Tags.Remove(Post.Tags.Single(t=>t.Id==tag.Id)); })">Remove</button>
+                    }
+                    else
+                    {
+                        <button type="button" @onclick="@(()=> { 
+                                                            Post.Tags.Add(tag); })">Add</button>
+                    }
+                </li>
+            }
+        </ul>
+        <InputTextAreaOnInput @bind-Value="Post.Text" @onkeyup="UpdateHTML"/>
+        <ValidationMessage For="() => Post.Text"/>
+        
+        <button type="submit" class="btn btn-success">Save</button>
+    </EditForm>
 
-@((MarkupString)markDownAsHTML)
+    <div id="post-preview" class="col-6">
+        <h1>@Post.Title</h1>
+        <span>@Post.PublishDate.ToLongDateString()</span>
+        <article class="pt-3">
+            @((MarkupString)markDownAsHTML)
+        </article>
+    </div>
+
+</div>
 
 @code {
     [Parameter]
