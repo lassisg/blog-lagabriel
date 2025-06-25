@@ -45,7 +45,7 @@ builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSe
 builder.Services.AddOptions<BlogApiJsonDirectAccessSetting>()
     .Configure(options =>
     {
-        options.DataPath = @"../../../Data";
+        options.DataPath = @"../../Data";
         options.BlogPostsFolder = "BlogPosts";
         options.TagsFolder = "Tags";
         options.CategoriesFolder = "Categories";
