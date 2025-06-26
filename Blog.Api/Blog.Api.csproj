@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>Blog-f8a18b22-927e-4260-8ffe-88b375ac438a</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.6"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Data.Models\Data.Models.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="data\BlogPosts\d42c8f31-053a-447b-a07e-89c207b35739.json" />
+      <None Include="data\Categories\f23ad71a-6b8c-4f25-9e0f-667211bf29df.json" />
+      <None Include="data\Tags\39662e48-aeb8-4e16-bc9d-3ec1543098f8.json" />
+      <None Include="data\Tags\3cf5fae0-03b0-437c-9189-ad1940236d6e.json" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication">
+        <HintPath>..\..\..\..\..\.nuget\packages\microsoft.aspnetcore.components.webassembly.authentication\9.0.6\lib\net9.0\Microsoft.AspNetCore.Components.WebAssembly.Authentication.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+</Project>

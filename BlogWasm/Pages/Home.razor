@@ -1,0 +1,59 @@
+@using System.Globalization
+@using Data.Models
+@using Data.Models.Interfaces
+@using Markdig;
+@page "/"
+@* @rendermode InteractiveServer *@
+@inject IBlogApi _api
+
+<Virtualize ItemsProvider="LoadPosts" Context="p">
+    <div class="col-xxl-4 col-lg-6 col-md-8 mx-auto">
+        <article class="card border-0 border-bottom">
+            <div class="row g-0">
+                <div class="col">
+                    <div class="card-body">
+                        <h2 class="card-title">@p.Title</h2>
+                        @((MarkupString)Markdown.ToHtml(new string(p.Text.Take(100).ToArray()), pipeline))
+                        <div class="text-end">
+                            <p class="card-text"><small class="text-body-secondary">Publised on @p.PublishDate.ToString("D", enUS)</small></p>
+                            <a href="/Post/@p.Id">Read more</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </div>
+    
+    
+    
+</Virtualize>
+
+@code{
+    [Parameter]
+    public string BlogPostId { get; set; }
+
+    public int totalBlogPosts { get; set; }
+    CultureInfo enUS = new("en-US");
+    
+    MarkdownPipeline pipeline;
+    
+    protected override Task OnInitializedAsync()
+    {
+        pipeline = new MarkdownPipelineBuilder()
+            .UseEmojiAndSmiley()
+            .Build();
+        return base.OnInitializedAsync();
+    }
+
+    private async ValueTask<ItemsProviderResult<BlogPost>>
+        LoadPosts(ItemsProviderRequest request)
+    {
+        if (totalBlogPosts == 0)
+        {
+            totalBlogPosts = await _api.GetBlogPostCountAsync();
+        }
+        var numblogposts = Math.Min(request.Count, totalBlogPosts - request.StartIndex);
+        var blogposts= await _api.GetBlogPostsAsync(numblogposts,request.StartIndex);
+        return new ItemsProviderResult<BlogPost>(blogposts, totalBlogPosts);
+    }
+}

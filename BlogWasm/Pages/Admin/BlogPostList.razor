@@ -1,0 +1,43 @@
+@using Data.Models
+@using Data.Models.Interfaces
+@* @page "/admin/blogposts" *@
+
+@attribute [StreamRendering(true)]
+@* @attribute [Authorize] *@
+@inject IBlogApi _api
+
+<div class="col-xxl-4 col-lg-6 col-md-8 mx-auto">
+    <a href="/admin/blogposts/new">New blog post</a>
+
+    @if (posts?.Count == 0)
+    {
+        <p>No blog posts found</p>
+    }
+    else if (posts == null)
+    {
+        <p>Loading...</p>
+    }
+    else
+    {
+        <ul>
+            @foreach (var p in posts)
+            {
+                <li>
+                    @p.PublishDate.ToShortDateString() |
+                    <a href="/admin/blogposts/@p.Id">@p.Title</a>
+                </li>
+            }
+        </ul>
+    }
+</div>
+
+@code {
+    private List<BlogPost>? posts;
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(1000);
+        int numberOfPosts = await _api.GetBlogPostCountAsync();
+        posts = await _api.GetBlogPostsAsync(numberOfPosts, 0);
+        await base.OnInitializedAsync();
+    }
+}

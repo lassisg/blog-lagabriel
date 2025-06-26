@@ -1,0 +1,51 @@
+@page "/Post/{BlogPostId}"
+
+@inject IBlogApi _api
+@inject NavigationManager _navman
+@using Data.Models
+@using Data.Models.Interfaces
+@using Markdig;
+
+@if (BlogPost is not null)
+{
+    <PageTitle>@BlogPost.Title</PageTitle>
+    <HeadContent>
+        <meta property="og:title" content="@BlogPost.Title"/>
+        <meta property="og:description" content="@(new string(BlogPost.Text.Take(100).ToArray()))"/>
+        <meta property="og:image" content="@($"{_navman.BaseUri}/pathtoanimage.png")"/>
+        <meta property="og:url" content="@_navman.Uri"/>
+        <meta property="twitter:card" content="@(new string(BlogPost.Text.Take(100).ToArray()))"/>
+    </HeadContent>
+        
+    <div class="col-xxl-4 col-lg-6 col-md-8 mx-auto">
+        <div class="card border-0">
+            <div class="card-body">
+                <h2 class="card-title">@BlogPost.Title</h2>
+                <h6 class="card-subtitle mb-2 text-body-secondary">@BlogPost.PublishDate.ToLongDateString()</h6>
+                @((MarkupString)Markdig.Markdown.ToHtml(BlogPost.Text,pipeline))
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string BlogPostId { get; set; }
+    public BlogPost? BlogPost { get; set; }
+
+    MarkdownPipeline pipeline;
+    protected override Task OnInitializedAsync()
+    {
+        pipeline = new MarkdownPipelineBuilder()
+            .UseEmojiAndSmiley()
+            .Build();
+        return base.OnInitializedAsync();
+    }
+    
+    protected override async Task OnParametersSetAsync()
+    {
+        BlogPost = await _api.GetBlogPostAsync(BlogPostId);
+        await base.OnParametersSetAsync();
+    }
+
+}
